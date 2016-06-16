@@ -51,14 +51,27 @@ static NSString* AppId=@"";
 //示例代码，分享，登录成功以后，回调。如果能处理(不管返回结果)就返回YES，否则返回NO，让别人处理。必须实现
 +(BOOL)Yixin_handleOpenURL{
     NSURL* url=[self returnedURL];
-    if ([url.scheme hasPrefix:@"yixin"]) {
-        if ([self shareSuccessCallback]) {
-            [self shareSuccessCallback]([self message]);
+    if ([url.scheme hasPrefix:@"yx"]) {
+        
+        NSDictionary *retDic = [NSKeyedUnarchiver unarchiveObjectWithData:[[UIPasteboard generalPasteboard] dataForPasteboardType:@"pasteBoardDataType"]];
+        NSDictionary *data = [retDic objectForKey:@"dictInfoData"];
+        NSNumber *code = [data objectForKey:@"code"];
+        if ([code isEqual:@(0)]) {
+            if ([self shareSuccessCallback]) {
+                [self shareSuccessCallback]([self message]);
+            }
+        }
+        else{
+            if ([self shareFailCallback]) {
+                [self shareFailCallback]([self message],nil);
+            }
         }
         return YES;
-    }else{
+    }
+    else{
         return NO;
     }
+   
 }
 
 @end

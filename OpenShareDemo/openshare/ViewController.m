@@ -175,9 +175,9 @@
         message.thumbnail = testThumbImage;
         message.link = @"http://www.163.com";
         [OpenShare shareToYixinTimeline:message Success:^(OSMessage *message) {
-            ULog(@"易信分享到好友成功：\n%@",message);
+            ULog(@"易信分享到朋友圈成功：\n%@",message);
         } Fail:^(OSMessage *message, NSError *error) {
-            ULog(@"易信分享到好友失败:\n%@\n%@",message,error);
+            ULog(@"易信分享到朋友圈失败:\n%@\n%@",message,error);
         }];
         
     } forControlEvents:UIControlEventTouchUpInside];
