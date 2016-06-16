@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "OpenShareHeader.h"
 #import "ViewController.h"
+#import <objc/runtime.h>
 @interface AppDelegate ()
 
 @end
@@ -24,7 +25,14 @@
     [OpenShare connectWeiboWithAppKey:@"402180334"];
     [OpenShare connectWeixinWithAppId:@"wxd930ea5d5a258f4f"];
     [OpenShare connectRenrenWithAppId:@"228525" AndAppKey:@"1dd8cba4215d4d4ab96a49d3058c1d7f"];
+    [OpenShare connecYixinWithAppId:@"yx5e4edc05d95443daa0d262026498ce78"];
     [OpenShare connectAlipay];//支付宝参数都是服务器端生成的，这里不需要key.
+    
+    [self swizzleOpenUrl];
+    [self swizzlePasteboard];
+    [self swizzlePasteboardGetData];
+    [self swizzlePasteboardSetData];
+    
     //添加demo ui
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController=[[UINavigationController alloc] initWithRootViewController:[ViewController new]];
@@ -61,5 +69,61 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
+
+//对UIApplication的openURL:方法进行hook
+-(void)swizzleOpenUrl{
+    SEL openUrlSEL=@selector(openURL:);
+    BOOL (*openUrlIMP)(id,SEL,id) =(BOOL(*)(id,SEL,id))[UIApplication instanceMethodForSelector:openUrlSEL];
+    static int count=0;
+    BOOL (^myOpenURL)(id SELF,NSURL * url)=^(id SELF,NSURL *url){
+        NSLog(@"\n----------open url: %d----------\n%@\n%@\n",count++,url,@"\n"/*[NSThread callStackSymbols]*/);
+        
+        return (BOOL)openUrlIMP(SELF,openUrlSEL,url);
+    };
+    class_replaceMethod([UIApplication class], openUrlSEL, imp_implementationWithBlock(myOpenURL), NULL);
+}
+//pasteboardWithName:create:方法进行hook，注意这是一个类方法
+-(void)swizzlePasteboard{
+    SEL pasteboardWithNameSEL=@selector(pasteboardWithName:create:);
+    UIPasteboard* (*pasteboardWithNameIMP)(id,SEL,id,BOOL) =(UIPasteboard* (*)(id,SEL,id,BOOL))[UIPasteboard methodForSelector:pasteboardWithNameSEL];
+    
+    static int count=0;
+    UIPasteboard* (^mypasteboardWithName)(id SELF,NSString *name,BOOL create)=^(id SELF,NSString *name,BOOL create){
+        NSLog(@"\n----------pasteboardWithName: %d----------\n%@\n%d\n",count++,name,create);
+        return (UIPasteboard*)pasteboardWithNameIMP(SELF,pasteboardWithNameSEL,name,create);
+    };
+    class_replaceMethod(/*类方法hook http://stackoverflow.com/a/3267898/3825920*/object_getClass((id)[UIPasteboard class]), pasteboardWithNameSEL, imp_implementationWithBlock(mypasteboardWithName), NULL);
+}
+
+//粘贴板setData:forPasteboardType:
+-(void)swizzlePasteboardSetData{
+    SEL swizzlePasteboardSetDataSEL=@selector(setData:forPasteboardType:);
+    void (*swizzlePasteboardSetDataIMP)(id,SEL,id,id)=(void(*)(id,SEL,id,id))[UIPasteboard instanceMethodForSelector:swizzlePasteboardSetDataSEL];
+    
+    static int count=0;
+    void (^mypasteboardSetData)(id SELF,NSData *data,NSString *type)=^(id SELF,NSData *data,NSString *type){
+        
+        NSDictionary *dict = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+        NSLog(@"\n----------swizzlePasteboardSetData: %d----------\n%@\n%@\n%@\n",count++,[((UIPasteboard *)SELF) name], type,dict);
+        swizzlePasteboardSetDataIMP(SELF,swizzlePasteboardSetDataSEL,data,type);
+        
+    };
+    class_replaceMethod([UIPasteboard class], swizzlePasteboardSetDataSEL, imp_implementationWithBlock(mypasteboardSetData), NULL);
+}
+
+//粘贴板 dataForPasteboardType:
+-(void)swizzlePasteboardGetData{
+    SEL swizzlePasteboardGetDataSEL=@selector(dataForPasteboardType:);
+    NSData* (*swizzlePasteboardGetDataIMP)(id,SEL,id)=(NSData*(*)(id,SEL,id))[UIPasteboard instanceMethodForSelector:swizzlePasteboardGetDataSEL];
+    
+    static int count=0;
+    NSData* (^mypasteboardGetData)(id SELF,NSString *type)=^(id SELF,NSString *type){//
+        NSData *ret=(NSData*)swizzlePasteboardGetDataIMP(SELF,swizzlePasteboardGetDataSEL,type);
+        //NSLog(@"\n----------pasteboardGetData: %d----------\n%@\n%@\n%@\n%@",count++,[((UIPasteboard *)SELF) name], type,ret,ret);
+        return ret;
+    };
+    class_replaceMethod([UIPasteboard class], swizzlePasteboardGetDataSEL, imp_implementationWithBlock(mypasteboardGetData), NULL);
+}
+
 
 @end

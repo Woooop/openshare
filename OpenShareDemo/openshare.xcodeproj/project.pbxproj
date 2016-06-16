@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		768733411D012170000E51BB /* OpenShare+Yixin.m in Sources */ = {isa = PBXBuildFile; fileRef = 768733401D012170000E51BB /* OpenShare+Yixin.m */; };
 		B66BF3B31B0C137E0082F8D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B66BF3B21B0C137E0082F8D6 /* main.m */; };
 		B66BF3B61B0C137E0082F8D6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B66BF3B51B0C137E0082F8D6 /* AppDelegate.m */; };
 		B66BF3B91B0C137E0082F8D6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B66BF3B81B0C137E0082F8D6 /* ViewController.m */; };
@@ -38,6 +39,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7687333F1D012170000E51BB /* OpenShare+Yixin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "OpenShare+Yixin.h"; path = "../openshare/OpenShare+Yixin.h"; sourceTree = "<group>"; };
+		768733401D012170000E51BB /* OpenShare+Yixin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "OpenShare+Yixin.m"; path = "../openshare/OpenShare+Yixin.m"; sourceTree = "<group>"; };
 		B66BF3AD1B0C137E0082F8D6 /* openshare.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = openshare.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B66BF3B11B0C137E0082F8D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B66BF3B21B0C137E0082F8D6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -171,6 +174,8 @@
 				B66BF3E31B0C16290082F8D6 /* OpenShare+QQ.m */,
 				B66BF3E41B0C16290082F8D6 /* OpenShare+Renren.h */,
 				B66BF3E51B0C16290082F8D6 /* OpenShare+Renren.m */,
+				7687333F1D012170000E51BB /* OpenShare+Yixin.h */,
+				768733401D012170000E51BB /* OpenShare+Yixin.m */,
 				B66BF3E61B0C16290082F8D6 /* OpenShare+Weibo.h */,
 				B66BF3E71B0C16290082F8D6 /* OpenShare+Weibo.m */,
 				B66BF3E81B0C16290082F8D6 /* OpenShare+Weixin.h */,
@@ -299,6 +304,7 @@
 				B6E22B1F1B213B09001930CA /* OpenShare+Alipay.m in Sources */,
 				B66BF3ED1B0C16290082F8D6 /* OpenShare+QQ.m in Sources */,
 				B66BF3F01B0C16290082F8D6 /* OpenShare+Weixin.m in Sources */,
+				768733411D012170000E51BB /* OpenShare+Yixin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -39,6 +39,7 @@
             @"qq":@"\U0000e602",
             @"renren":@"\U0000e603",
             @"alipay":@"\U0000e605",
+            @"yixin" :@"易"
             //            @"facebook":@"\U0000e606",
             //            @"twitter":@"\U0000e604"
             };
@@ -54,7 +55,7 @@
     if (fromX<0) {
         fromX=0;
     }
-    for (NSString *icon in @[@"weibo",@"qq",@"weixin",@"renren",@"alipay"]/*对dictionary进行for-in，不能保证顺序*/) {
+    for (NSString *icon in @[@"weibo",@"qq",@"weixin",@"renren",@"alipay",@"yixin"]/*对dictionary进行for-in，不能保证顺序*/) {
         UIButton *btn=[UIButton buttonWithType:UIButtonTypeCustom];
         btn.layer.cornerRadius=buttonWidth/2;
         btn.clipsToBounds=YES;
@@ -91,7 +92,7 @@
     
     //测试分享的view
     CGRect frame=CGRectMake(0, 10, SCREEN_WIDTH-fromX*2, panel.frame.size.height);
-    NSArray *views=@[[UIView new],[self sinaWeiboView:frame],[self qqView:frame],[self weixinView:frame],[self renrenView:frame],[self alipayView:frame]];
+    NSArray *views=@[[UIView new],[self sinaWeiboView:frame],[self qqView:frame],[self weixinView:frame],[self renrenView:frame],[self alipayView:frame],[self yixinView:frame]];
     for (int i=1; i<=icons.count; i++) {
         UIView *view=views[i];
         view.tag=100+i;
@@ -139,6 +140,47 @@
         
     } forControlEvents:UIControlEventTouchUpInside];
     
+    
+    return view;
+}
+
+#pragma mark 易信测试
+-(UIView*)yixinView:(CGRect)frame{
+    UIView *view=[[UIView alloc]initWithFrame:frame];
+    UIButton *yixinWebSessionShare=[self button:@"易信web分享" WithCenter:CGPointMake(frame.size.width/2, 40)];
+    [view addSubview:yixinWebSessionShare];
+    [yixinWebSessionShare addEventHandler:^(UIButton* sender) {
+        OSMessage *message=[[OSMessage alloc]init];
+        message.title = @"Hello Open Share";
+        message.desc = @"易信webPage分享测试";
+        message.image = testThumbImage;
+        message.thumbnail = testThumbImage;
+        message.link = @"http://www.163.com";
+        [OpenShare shareToYixinSession:message Success:^(OSMessage *message) {
+            ULog(@"易信分享到好友成功：\n%@",message);
+        } Fail:^(OSMessage *message, NSError *error) {
+            ULog(@"易信分享到好友失败:\n%@\n%@",message,error);
+        }];
+        
+    } forControlEvents:UIControlEventTouchUpInside];
+    
+    
+    UIButton *yixinWebTimlineShare=[self button:@"易信朋友圈分享" WithCenter:CGPointMake(frame.size.width/2, 80)];
+    [view addSubview:yixinWebTimlineShare];
+    [yixinWebTimlineShare addEventHandler:^(UIButton* sender) {
+        OSMessage *message=[[OSMessage alloc]init];
+        message.title = @"Hello Open Share";
+        message.desc = @"易信webPage分享测试";
+        message.image = testThumbImage;
+        message.thumbnail = testThumbImage;
+        message.link = @"http://www.163.com";
+        [OpenShare shareToYixinTimeline:message Success:^(OSMessage *message) {
+            ULog(@"易信分享到好友成功：\n%@",message);
+        } Fail:^(OSMessage *message, NSError *error) {
+            ULog(@"易信分享到好友失败:\n%@\n%@",message,error);
+        }];
+        
+    } forControlEvents:UIControlEventTouchUpInside];
     
     return view;
 }
