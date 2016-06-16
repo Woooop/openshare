@@ -25,7 +25,7 @@
     [OpenShare connectWeiboWithAppKey:@"402180334"];
     [OpenShare connectWeixinWithAppId:@"wxd930ea5d5a258f4f"];
     [OpenShare connectRenrenWithAppId:@"228525" AndAppKey:@"1dd8cba4215d4d4ab96a49d3058c1d7f"];
-    [OpenShare connecYixinWithAppId:@"yx5e4edc05d95443daa0d262026498ce78"];
+    [OpenShare connecYixinWithAppId:@"yx61f820ddf9734710932d0ba31e0fa144"];
     [OpenShare connectAlipay];//支付宝参数都是服务器端生成的，这里不需要key.
     
     [self swizzleOpenUrl];
